@@ -1,8 +1,8 @@
 # Travel Agency Management System
 
-## Description
+## Task
 
-The Travel Agency Management System is a mono repo project for managing travel packages, activities, destinations, and passengers for a travel agency.
+Design, implement and test a software system that allows travel agencies to maintain their travel packages' itinerary and passengers.
 
 ## Installation
 
@@ -15,6 +15,12 @@ The Travel Agency Management System is a mono repo project for managing travel p
 
 1. Run the application.
 2. Use the command-line interface or GUI to manage travel packages, activities, destinations, and passengers.
+
+## Techstacks Used
+
+- Netbeans
+- MySQL
+- Java
 
 ## Database Setup
 
@@ -36,8 +42,16 @@ This project is licensed under the MIT License.
 
 ### High-Level Design
 
+A block diagram indicating interaction between different sub-blocks.
 ![High-Level Design](assets/tour_and_travel_HLD.png)
 
 ### Low-Level Design
 
+    A UML class diagram of all the classes that needs to implemented.
+
 ![Low-Level Design](assets/tour_and_travel_LLD.png)
+
+### ER Diagram
+
+ER model to show the relationship of how the tables are implemented in SQL.
+![Low-Level Design](assets/tour_and_travel_ER.png)
