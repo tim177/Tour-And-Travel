@@ -68,7 +68,7 @@ public class TravelPackage {
     }
     
    public void printItinerary() {
-       System.out.println("Inside printItinerary");
+    System.out.println("Inside printItinerary");
     String packageName = JOptionPane.showInputDialog("Enter the name of the travel package:");
     if (packageName != null && !packageName.isEmpty()) {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -103,74 +103,64 @@ public class TravelPackage {
         System.out.println("Invalid input. Please enter a valid travel package name.");
     }
 }
-
-   public void printPassengerList() {
-    DatabaseManager databaseManager = new DatabaseManager();
-    String query = "SELECT p.name, p.passenger_number " +
-                   "FROM passengers p " +
-                   "JOIN passenger_activities pa ON p.id = pa.passenger_id " +
-                   "JOIN activities a ON pa.activity_id = a.id " +
-                   "JOIN destinations d ON a.destination_id = d.id " +
-                   "WHERE d.package_id = (SELECT id FROM travel_packages WHERE name = ?)";
-    try (Connection connection = databaseManager.getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setString(1, name);
-        try (ResultSet resultSet = statement.executeQuery()) {
-            System.out.println("Travel Package: " + name);
-            System.out.println("Passenger Capacity: " + passengerCapacity);
-            System.out.println("Number of Passengers Enrolled: " + passengers.size());
-            System.out.println("Passengers:");
-            while (resultSet.next()) {
-                String passengerName = resultSet.getString("name");
-                String passengerNumber = resultSet.getString("passenger_number");
-                System.out.println("- Name: " + passengerName + ", Number: " + passengerNumber);
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        databaseManager.closeConnection();
-    }
-}
    
    public void printPassengerDetails(int passengerNumber) {
-    DatabaseManager databaseManager = new DatabaseManager();
-    String query = "SELECT p.name, p.passenger_number, p.type, " +
-                   "CASE " +
-                   "    WHEN p.type = 'Standard' THEN s.balance " +
-                   "    WHEN p.type = 'Gold' THEN g.balance " +
-                   "    ELSE 'Unlimited' " +
-                   "END AS balance, a.name AS activity_name, a.description AS activity_description, a.cost AS activity_cost " +
-                   "FROM passengers p " +
-                   "LEFT JOIN standard_passengers s ON p.id = s.passenger_id " +
-                   "LEFT JOIN gold_passengers g ON p.id = g.passenger_id " +
-                   "JOIN passenger_activities pa ON p.id = pa.passenger_id " +
-                   "JOIN activities a ON pa.activity_id = a.id " +
-                   "WHERE p.passenger_number = ?";
-    try (Connection connection = databaseManager.getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setInt(1, passengerNumber);
-        try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                String passengerName = resultSet.getString("name");
-                String passengerType = resultSet.getString("type");
-                String balance = resultSet.getString("balance");
-                System.out.println("Passenger Name: " + passengerName);
-                System.out.println("Passenger Number: " + passengerNumber);
-                System.out.println("Passenger Type: " + passengerType);
-                System.out.println("Balance: " + balance);
-                System.out.println("Activities:");
-                do {
-                    String activityName = resultSet.getString("activity_name");
-                    String activityDescription = resultSet.getString("activity_description");
-                    double activityCost = resultSet.getDouble("activity_cost");
-                    System.out.println("- Activity Name: " + activityName);
-                    System.out.println("  Description: " + activityDescription);
-                    System.out.println("  Cost: " + activityCost);
-                } while (resultSet.next());
-            } else {
-                System.out.println("Passenger with number " + passengerNumber + " not found.");
+        DatabaseManager databaseManager = new DatabaseManager();
+        try (Connection connection = databaseManager.getConnection()) {
+            String query = "SELECT p.name, p.passenger_number, p.type, p.balance " +
+               "FROM passengers p " +
+               "WHERE p.passenger_number = '" + passengerNumber + "'";
+                
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                if (resultSet.next()) {
+                    String passengerName = resultSet.getString("name");
+                    String passengerType = resultSet.getString("type");
+                    String balance = resultSet.getString("balance");
+                    System.out.println("Passenger Name: " + passengerName);
+                    System.out.println("Passenger Number: " + passengerNumber);
+                    System.out.println("Passenger Type: " + passengerType);
+                    System.out.println("Balance: " + balance);
+                } else {
+                    System.out.println("Passenger with number " + passengerNumber + " not found.");
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            databaseManager.closeConnection();
+       }
+    }
+  
+    public void printPassengerList() {
+    String packageName = JOptionPane.showInputDialog("Enter the name of the travel package:");
+
+    DatabaseManager databaseManager = new DatabaseManager();
+    String packageQuery = "SELECT id FROM travel_packages WHERE name = '" + packageName + "'";
+    try (Connection connection = databaseManager.getConnection();
+         Statement packageStatement = connection.createStatement();
+         ResultSet packageResultSet = packageStatement.executeQuery(packageQuery)) {
+        if (packageResultSet.next()) {
+            int packageId = packageResultSet.getInt("id");
+            String query = "SELECT p.name, p.passenger_number, p.type, p.balance " +
+                    "FROM passengers p " +
+                    "WHERE p.travel_package_name = '" + packageName + "'";
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                while (resultSet.next()) {
+                    String passengerName = resultSet.getString("name");
+                    String passengerNumber = resultSet.getString("passenger_number");
+                    String passengerType = resultSet.getString("type");
+                    double balance = resultSet.getDouble("balance");
+                    System.out.println("Passenger Name: " + passengerName);
+                    System.out.println("Passenger Number: " + passengerNumber);
+                    System.out.println("Passenger Type: " + passengerType);
+                    System.out.println("Balance: " + balance);
+                    System.out.println("------------------------");
+                }
+            }
+        } else {
+            System.out.println("Travel package not found.");
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -178,5 +168,6 @@ public class TravelPackage {
         databaseManager.closeConnection();
     }
 }
+
 }
     

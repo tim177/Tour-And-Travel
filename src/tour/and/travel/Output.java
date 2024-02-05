@@ -10,10 +10,10 @@ public class Output extends JFrame implements ActionListener {
 
     public Output() {
         setTitle("Tour and Travel Management System");
-        setBounds(300, 150, 600, 400);
+        setBounds(300, 150, 300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
-        setLayout(new GridLayout(4, 1, 10, 10));
+        setLayout(new GridLayout(3, 1, 10, 10));
 
         btnTravelPackage = new JButton("Travel Package Detail");
         btnTravelPackage.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -22,26 +22,19 @@ public class Output extends JFrame implements ActionListener {
         btnTravelPackage.addActionListener(this);
         add(btnTravelPackage);
 
-        btnActivity = new JButton("Passenger Details");
+        btnActivity = new JButton("Passenger List");
         btnActivity.setFont(new Font("Tahoma", Font.BOLD, 18));
         btnActivity.setForeground(Color.WHITE);
         btnActivity.setBackground(new Color(47, 79, 79));
         btnActivity.addActionListener(this);
         add(btnActivity);
 
-        btnDestination = new JButton("Destination");
+        btnDestination = new JButton("Passenger Detail");
         btnDestination.setFont(new Font("Tahoma", Font.BOLD, 18));
         btnDestination.setForeground(Color.WHITE);
         btnDestination.setBackground(new Color(47, 79, 79));
         btnDestination.addActionListener(this);
         add(btnDestination);
-
-        btnPassengers = new JButton("Passengers");
-        btnPassengers.setFont(new Font("Tahoma", Font.BOLD, 18));
-        btnPassengers.setForeground(Color.WHITE);
-        btnPassengers.setBackground(new Color(47, 79, 79));
-        btnPassengers.addActionListener(this);
-        add(btnPassengers);
 
         setVisible(true);
     }
@@ -57,13 +50,10 @@ public class Output extends JFrame implements ActionListener {
             TravelPackage travelPackage = new TravelPackage("YourPackage", 10);
             travelPackage.printPassengerList();
         } else if (ae.getSource() == btnDestination) {
-            // Open destination management window
-            // ...
             System.out.println("Destination button clicked");
-        } else if (ae.getSource() == btnPassengers) {
-            // Open passengers management window
-            // ...
-            System.out.println("Passengers button clicked");
+            TravelPackage travelPackage = new TravelPackage("YourPackage", 10);
+            int passengerNumber = Integer.parseInt(JOptionPane.showInputDialog("Enter the id of the Passener:"));
+            travelPackage.printPassengerDetails(passengerNumber);
         }
     }
 

@@ -3,13 +3,13 @@ package tour.and.travel;
 import java.util.Scanner;
 
 public class Input {
- public static void main(String[] agrs){
-     System.out.println("Input");
-     
+    public Input(){
+        System.out.println("Input");
+
         DatabaseManager databaseManager = new DatabaseManager();
         Scanner scanner = new Scanner(System.in);
         
-        
+        //TRAVEL PACAKGES
         System.out.println("Do you want to add a travel package? (yes/no)");
         String response = scanner.nextLine().trim().toLowerCase();
 
@@ -93,9 +93,13 @@ public class Input {
             String passengerNumber = scanner.nextLine().trim();
             System.out.print("Passenger type (standard/gold/premium): ");
             String passengerType = scanner.nextLine().trim().toLowerCase();
-
-            String passengerQuery = "INSERT INTO passengers (name, passenger_number, type) " +
-                    "VALUES ('" + passengerName + "', '" + passengerNumber + "', '" + passengerType + "')";
+            System.out.print("Passenger Balance: ");
+            String passengerBalance = scanner.nextLine().trim();
+            System.out.print("Enter travel package name for this Passenger: ");
+            String packageNameRef = scanner.nextLine().trim();
+            
+            String passengerQuery = "INSERT INTO passengers (name, passenger_number, type, balance, travel_package_name) " +
+                    "VALUES ('" + passengerName + "', '" + passengerNumber + "', '" + passengerType + "', '" + passengerBalance + "', '" + packageNameRef + "')";
             databaseManager.insertData(passengerQuery);
 
             System.out.println("Passenger added successfully.");
@@ -127,5 +131,8 @@ public class Input {
 
         databaseManager.closeConnection();
         
+    }
+ public static void main(String[] agrs){
+        new Input();
  }   
 }
